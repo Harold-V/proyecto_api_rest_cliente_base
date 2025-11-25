@@ -1,3 +1,4 @@
+
 package co.edu.unicauca.distribuidos.core.capaControladores;
 
 import java.util.List;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.distribuidos.core.fachadaServices.DTO.ClienteDTO;
 import co.edu.unicauca.distribuidos.core.fachadaServices.services.IClienteService;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -67,29 +67,31 @@ public class ClienteRestController {
 		return msg;
 	}
 
-	// MODIFICADO: Retorna ResponseEntity con HttpStatus.CREATED
-	// y permite que las excepciones se propaguen
 	@PostMapping("/clientes")
-	public ResponseEntity<ClienteDTO> crearCliente(@Valid @RequestBody ClienteDTO cliente) {
-		ClienteDTO objCliente = clienteService.save(cliente);
-		return new ResponseEntity<>(objCliente, HttpStatus.CREATED);
+	public ClienteDTO crearCliente(@RequestBody ClienteDTO cliente) {
+		ClienteDTO objCliente = null;
+		objCliente = clienteService.save(cliente);
+		return objCliente;
 	}
 
-	// MODIFICADO: Retorna ResponseEntity con HttpStatus.OK
-	// Elimina la validación if porque ahora la excepción se lanza en el service
 	@PutMapping("/clientes/{id}")
-	public ResponseEntity<ClienteDTO> actualizarCliente(@Valid @RequestBody ClienteDTO cliente,
-			@PathVariable Integer id) {
-		ClienteDTO objCliente = clienteService.update(id, cliente);
-		return new ResponseEntity<>(objCliente, HttpStatus.OK);
+	public ClienteDTO actualizarCliente(@RequestBody ClienteDTO cliente, @PathVariable Integer id) {
+		ClienteDTO objCliente = null;
+		ClienteDTO clienteActual = clienteService.findById(id);
+		if (clienteActual != null) {
+			objCliente = clienteService.update(id, cliente);
+		}
+		return objCliente;
 	}
 
-	// MODIFICADO: Retorna ResponseEntity con HttpStatus.NO_CONTENT
-	// Elimina la validación if porque ahora la excepción se lanza en el service
 	@DeleteMapping("/clientes/{id}")
-	public ResponseEntity<Boolean> eliminarCliente(@PathVariable Integer id) {
-		Boolean bandera = clienteService.delete(id);
-		return new ResponseEntity<>(bandera, HttpStatus.NO_CONTENT);
+	public Boolean eliminarCliente(@PathVariable Integer id) {
+		Boolean bandera = false;
+		ClienteDTO clienteActual = clienteService.findById(id);
+		if (clienteActual != null) {
+			bandera = clienteService.delete(id);
+		}
+		return bandera;
 	}
 
 	@GetMapping("/clientes/listarCabeceras")
@@ -106,4 +108,5 @@ public class ClienteRestController {
 		ResponseEntity<Boolean> objRespuesta = new ResponseEntity<Boolean>(bandera, HttpStatus.OK);
 		return objRespuesta;
 	}
+
 }

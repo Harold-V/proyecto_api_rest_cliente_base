@@ -94,24 +94,6 @@ public class UsuarioRepository {
 		return bandera;
 	}
 
-	public boolean exiteClienteConCorreo(String email) {
-		for (ClienteEntity cliente : listaDeClientes) {
-			if (cliente.getEmail().equals(email)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean existeCliente(Integer id) {
-		for (ClienteEntity cliente : listaDeClientes) {
-			if (cliente.getId().equals(id)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	private void cargarClientes() {
 		ClienteEntity objCliente1 = new ClienteEntity(1, "123456", "Juan", "Perez", "juan@unicauca.edu.co", new Date());
 		this.listaDeClientes.add(objCliente1);
